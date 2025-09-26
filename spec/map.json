@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "NSW Secondary Schools and Train Stations",
+  "title": "NSW Secondary Schools & Train Stations",
   "width": 1000,
   "height": 600,
   "config": {
@@ -76,3 +76,4 @@
     }
   ]
 }
+
