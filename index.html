@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>NSW Schools & Train Stations</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    #map { max-width: 1100px; margin: 16px auto; }
+  </style>
+</head>
+<body>
+  <h2 style="text-align:center">NSW Schools & Train Stations</h2>
+  <div id="map"></div>
+  <script> vegaEmbed('#map', 'spec/map.json', { actions: false }); </script>
+</body>
+</html>
