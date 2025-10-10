@@ -15,6 +15,13 @@
 <body>
   <h2 style="text-align:center">NSW Schools & Train Stations</h2>
   <div id="map"></div>
-  <script> vegaEmbed('#map', 'spec/map.json', { actions: false }); </script>
+
+  <h2 style="text-align:center; margin-top:28px">Interactive Locator — Filter, Tooltips & Annotations</h2>
+  <div id="loc" style="max-width:1100px; margin:16px auto;"></div>
+
+  <script>
+    vegaEmbed('#map', 'spec/map.json', { actions: false });
+    vegaEmbed('#loc', 'spec/scatter.json', { actions: false });
+  </script>
 </body>
 </html>
