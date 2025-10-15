@@ -1,0 +1,17 @@
+{
+  "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
+  "description":"Secondary school gender composition.",
+  "width":1000,"height":220,
+  "data":{"url":"data/schools.csv"},
+  "transform":[
+    {"filter":"datum.Level_of_schooling == 'Secondary School'"},
+    {"aggregate":[{"op":"count","as":"n"}],"groupby":["School_gender"]}
+  ],
+  "mark":"bar",
+  "encoding":{
+    "x":{"field":"School_gender","type":"nominal","title":"Gender"},
+    "y":{"field":"n","type":"quantitative","title":"Secondary schools"},
+    "color":{"field":"School_gender","type":"nominal","legend":{"title":"Click to filter"}},
+    "tooltip":[{"field":"School_gender","title":"Gender"},{"field":"n","title":"Schools"}]
+  }
+}

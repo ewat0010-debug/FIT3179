@@ -1,0 +1,19 @@
+{
+  "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
+  "description":"Stations with the highest count of entrances.",
+  "width":520,"height":420,
+  "data":{"url":"data/stationentrances.csv"},
+  "transform":[
+    {"aggregate":[{"op":"count","as":"entrances"}],"groupby":["Train_Station"]},
+    {"window":[{"op":"rank","as":"rk"}],"sort":[{"field":"entrances","order":"descending"}]},
+    {"filter":"datum.rk <= 20"}
+  ],
+  "mark":{"type":"bar","cornerRadiusEnd":3},
+  "encoding":{
+    "y":{"field":"Train_Station","type":"nominal","sort":"-x","title":"Station"},
+    "x":{"field":"entrances","type":"quantitative","title":"Entrances"},
+    "color":{"value":"#1f78b4"},
+    "tooltip":[{"field":"Train_Station","title":"Station"},{"field":"entrances","title":"Entrances"}]
+  },
+  "config":{"axis":{"labelLimit":260}}
+}

@@ -1,0 +1,20 @@
+{
+  "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
+  "description":"Top LGAs by number of secondary schools.",
+  "width":520,"height":420,
+  "data":{"url":"data/schools.csv"},
+  "transform":[
+    {"filter":"datum.Level_of_schooling == 'Secondary School'"},
+    {"aggregate":[{"op":"count","as":"schools"}],"groupby":["LGA"]},
+    {"window":[{"op":"rank","as":"rk"}],"sort":[{"field":"schools","order":"descending"}]},
+    {"filter":"datum.rk <= 15"}
+  ],
+  "mark":{"type":"bar","cornerRadiusEnd":3},
+  "encoding":{
+    "y":{"field":"LGA","type":"nominal","sort":"-x","title":"LGA"},
+    "x":{"field":"schools","type":"quantitative","title":"Secondary schools"},
+    "color":{"value":"#1f78b4"},
+    "tooltip":[{"field":"LGA"},{"field":"schools","title":"Schools"}]
+  },
+  "config":{"axis":{"labelLimit":250}}
+}

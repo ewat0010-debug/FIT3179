@@ -1,0 +1,32 @@
+{
+  "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
+  "description":"Histogram of enrolments for secondary schools with median line.",
+  "width":520,"height":420,
+  "data":{"url":"data/schools.csv"},
+  "transform":[
+    {"filter":"datum.Level_of_schooling == 'Secondary School'"},
+    {"calculate":"toNumber(datum.latest_year_enrolment_FTE)","as":"enrol"},
+    {"filter":"isValid(datum.enrol)"}
+  ],
+  "layer":[
+    {
+      "mark":"bar",
+      "encoding":{
+        "x":{"bin":{"step":100},"field":"enrol","type":"quantitative","title":"Enrolments (binned)"},
+        "y":{"aggregate":"count","title":"Number of schools"},
+        "tooltip":[{"aggregate":"count","title":"Schools in bin"}],
+        "color":{"value":"#89a8c8"}
+      }
+    },
+    {
+      "transform":[{"aggregate":[{"op":"median","field":"enrol","as":"med"}]}],
+      "mark":{"type":"rule","stroke":"#ff7f0e","strokeWidth":2},
+      "encoding":{"x":{"field":"med","type":"quantitative"}}
+    },
+    {
+      "transform":[{"aggregate":[{"op":"median","field":"enrol","as":"med"}]}],
+      "mark":{"type":"text","align":"left","dx":4,"dy":-6,"fontWeight":"bold"},
+      "encoding":{"x":{"field":"med","type":"quantitative"},"text":{"value":"Median"}}
+    }
+  ]
+}

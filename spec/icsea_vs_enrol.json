@@ -1,0 +1,37 @@
+{
+  "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
+  "description":"Relationship between ICSEA and enrolments for secondary schools.",
+  "width":520,"height":420,
+  "params":[
+    {"name":"icseaMin","value":800,"bind":{"input":"range","min":700,"max":1200,"step":10,"name":"Min ICSEA:"}},
+    {"name":"enrolMax","value":2000,"bind":{"input":"range","min":100,"max":2500,"step":50,"name":"Max enrolments:"}}
+  ],
+  "data":{"url":"data/schools.csv"},
+  "transform":[
+    {"filter":"datum.Level_of_schooling == 'Secondary School'"},
+    {"calculate":"toNumber(datum.ICSEA_value)","as":"icsea"},
+    {"calculate":"toNumber(datum.latest_year_enrolment_FTE)","as":"enrol"},
+    {"filter":"isValid(datum.icsea) && isValid(datum.enrol)"},
+    {"filter":"datum.icsea >= icseaMin && datum.enrol <= enrolMax"}
+  ],
+  "layer":[
+    {
+      "mark":{"type":"point","filled":true,"opacity":0.7},
+      "encoding":{
+        "x":{"field":"icsea","type":"quantitative","title":"ICSEA"},
+        "y":{"field":"enrol","type":"quantitative","title":"Enrolments"},
+        "color":{"field":"School_gender","type":"nominal","title":"Gender"},
+        "tooltip":[
+          {"field":"School_name","title":"School"},
+          {"field":"icsea","type":"quantitative","title":"ICSEA"},
+          {"field":"enrol","type":"quantitative","title":"Enrolments", "format":","}
+        ]
+      }
+    },
+    {
+      "transform":[{"regression":"enrol","on":"icsea"}],
+      "mark":{"type":"line","stroke":"#555","strokeDash":[4,3]},
+      "encoding":{"x":{"field":"icsea","type":"quantitative"},"y":{"field":"enrol","type":"quantitative"}}
+    }
+  ]
+}

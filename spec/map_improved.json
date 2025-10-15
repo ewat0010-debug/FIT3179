@@ -1,0 +1,74 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "NSW Secondary Schools & Train Stations (Overview)",
+  "width": 1000,
+  "height": 600,
+  "config": {"background":"#e6f2ff","view":{"stroke":null}},
+  "projection": {"type":"equirectangular","center":[151.2,-33.9],"scale":38000,"translate":[800,300]},
+  "params":[
+    {"name":"minEnrol","value":100,"bind":{"input":"range","min":0,"max":2000,"step":50,"name":"Min enrolments:"}}
+  ],
+  "layer":[
+    {
+      "data":{"url":"data/NSW_Graticule.json","format":{"type":"topojson","feature":"ne_110m_graticules_30"}},
+      "mark":{"type":"geoshape","stroke":"#c7c7c7","strokeWidth":0.6,"fill":null}
+    },
+    {
+      "data":{"url":"data/NSW_Graticule.json","format":{"type":"topojson","feature":"STE_2021_AUST_GDA94"}},
+      "mark":{"type":"geoshape","fill":"#f9f9f9","stroke":"#666","strokeWidth":1.2}
+    },
+    {
+      "data":{"url":"data/stationentrances.csv"},
+      "transform":[
+        {"calculate":"toNumber(datum.LAT)","as":"lat"},
+        {"calculate":"toNumber(datum.LONG)","as":"lon"}
+      ],
+      "mark":{"type":"point","shape":"triangle-up","opacity":0.8},
+      "encoding":{
+        "latitude":{"field":"lat","type":"quantitative"},
+        "longitude":{"field":"lon","type":"quantitative"},
+        "size":{"value":40},
+        "color":{"value":"#1f78b4"},
+        "tooltip":[
+          {"field":"Train_Station","title":"Station"},
+          {"field":"Entrance_Type","title":"Entrance"},
+          {"field":"lat","type":"quantitative","format":".5f","title":"Lat"},
+          {"field":"lon","type":"quantitative","format":".5f","title":"Lon"}
+        ]
+      }
+    },
+    {
+      "data":{"url":"data/schools.csv"},
+      "transform":[
+        {"filter":"datum.Level_of_schooling == 'Secondary School'"},
+        {"calculate":"toNumber(datum.Latitude)","as":"lat"},
+        {"calculate":"toNumber(datum.Longitude)","as":"lon"},
+        {"calculate":"toNumber(datum.latest_year_enrolment_FTE)","as":"enrol"},
+        {"filter":"isValid(datum.enrol) ? datum.enrol >= minEnrol : false"}
+      ],
+      "mark":{"type":"circle","opacity":0.75},
+      "encoding":{
+        "latitude":{"field":"lat","type":"quantitative"},
+        "longitude":{"field":"lon","type":"quantitative"},
+        "size":{"field":"enrol","type":"quantitative","title":"Enrolments","scale":{"domain":[100,2000]}},
+        "color":{"field":"School_gender","type":"nominal","title":"Gender"},
+        "tooltip":[
+          {"field":"School_name","title":"School"},
+          {"field":"School_gender","title":"Gender"},
+          {"field":"enrol","type":"quantitative","title":"Enrolments","format":","},
+          {"field":"lat","type":"quantitative","format":".5f","title":"Lat"},
+          {"field":"lon","type":"quantitative","format":".5f","title":"Lon"}
+        ]
+      }
+    },
+    {
+      "data":{"values":[{"name":"Sydney CBD (approx)","lat":-33.8688,"lon":151.2093}]},
+      "layer":[
+        {"mark":{"type":"rule","strokeDash":[4,3],"stroke":"#555"},"encoding":{"x":{"field":"lon","type":"quantitative"}}},
+        {"mark":{"type":"rule","strokeDash":[4,3],"stroke":"#555"},"encoding":{"y":{"field":"lat","type":"quantitative"}}},
+        {"mark":{"type":"text","fontWeight":"bold","dx":6,"dy":-6,"color":"#333"},
+         "encoding":{"longitude":{"field":"lon"},"latitude":{"field":"lat"},"text":{"field":"name"}}}
+      ]
+    }
+  ]
+}
